@@ -1,0 +1,15 @@
+{
+  "url" : "https://kith.com/collections/kith/products/kh9588-101",
+  "size" : "L",
+  "email" : "johnsmith@gmail.com",
+  "firstName" : "John",
+  "lastName" : "Smith",
+  "address" : "8888 Kith Avenue",
+  "city" : "Night City",
+  "zip" : "88888",
+  "phone" : "5556667777",
+  "card number" : "4444 5555 6666 7777",
+  "card name" : "John Smith",
+  "card expiry" : "07 21",
+  "ccv" : "456"
+ }
