@@ -2,27 +2,21 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import json
 import string
-from selenium.webdriver.chrome.options import Options
+#from selenium.webdriver.chrome.options import Options
 
-# from selenium.webdriver.common.by import By
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.support import expected_conditions as EC
-global driver # webdriver crashes, changing to global seems to fix
-chromeOptions = Options()
-chromeOptions.headless = True
-driver = webdriver.Chrome(executable_path="/usr/local/bin/chromedriver", options=chromeOptions)
+# global driver # webdriver crashes, changing to global seems to fix
+# chromeOptions = Options()
+# chromeOptions.headless = True
+# driver = webdriver.Chrome(executable_path="/usr/local/bin/chromedriver", options=chromeOptions)
 
 
 
 class Scraper(object):
-#    global driver # webdriver crashes, changing to global seems to fix
-#    chromeOptions = Options()
-#    chromeOptions.headless = True
-#    driver = webdriver.Chrome(executable_path="./usr/local/bin/chromedriver", options=chromeOptions)
+   global driver
+   driver = webdriver.Chrome()
 
-    def __init__(self, url, size, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv):
+    def __init__(self, url, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv):
         self.url = url
-        self.size = size
         self.email = email
         self.firstName = firstName
         self.lastName = lastName
@@ -36,11 +30,7 @@ class Scraper(object):
         self.ccv = ccv
 
     def scrape_init(self):
-        #kith US SHOE: https://kith.com/collections/mens-footwear/products/vn0a4uud1mk
-        #kith gloves: https://kith.com/collections/kith/products/kh9588-101
         url = self.url
-        size = self.size
-        print("Requested Size: ", size)
         driver.get(url)
 
         email = self.email
@@ -55,13 +45,8 @@ class Scraper(object):
         cardExp = self.cardExp.split()
         ccv = self.ccv
 
-        # if size == 'S' or size == 'M' or size == 'L' or size == "XL":         # CLOTHING SIZE (missing XS)
-        #     driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size.lower())).click()
-
-        if '.5' in size:         # SHOE SIZES (Mens US 3-15, EU 36-46)
-            driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size.replace(".5", "-5"))).click()
-        else:
-            driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size.lower())).click()
+        #age verification
+        driver.find_element_by_id('va-yes').click()
 
         driver.find_element_by_name('add').click()
         print("added to cart")
@@ -119,7 +104,6 @@ def main():
     file = open('file.json')
     elements = json.loads(file.read())
     url = (elements['url'])
-    size = (elements['size'])
     email = (elements['email'])
     firstName = (elements['firstName'])
     lastName = (elements['lastName'])
@@ -132,7 +116,7 @@ def main():
     cardExp = (elements['card expiry'])
     ccv = (elements['ccv'])
 
-    test = Scraper(url, size, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv)
+    test = Scraper(url, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv)
     test.scrape_init()
 
 if __name__ == "__main__":
