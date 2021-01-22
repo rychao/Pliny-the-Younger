@@ -1,19 +1,15 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import json
 import string
-#from selenium.webdriver.chrome.options import Options
-
-# global driver # webdriver crashes, changing to global seems to fix
-# chromeOptions = Options()
-# chromeOptions.headless = True
-# driver = webdriver.Chrome(executable_path="/usr/local/bin/chromedriver", options=chromeOptions)
-
+import time
 
 
 class Scraper(object):
-   global driver
-   driver = webdriver.Chrome()
+    global driver
+    driver = webdriver.Chrome()
 
     def __init__(self, url, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv):
         self.url = url
@@ -46,18 +42,18 @@ class Scraper(object):
         ccv = self.ccv
 
         #age verification
-        driver.find_element_by_id('va-yes').click()
+        # driver.find_element_by_id('va-yes').click()
 
-        driver.find_element_by_name('add').click()
+        driver.find_element_by_xpath('//*[@id="AddToCart-product-template"]').send_keys(Keys.RETURN)
         print("added to cart")
-        driver.implicitly_wait(60) # wait for cart button
-        driver.find_element_by_name('checkout').click()
+        time.sleep(1)
+        driver.get("https://www.shop.russianriverbrewing.com/cart")
+        driver.find_element_by_xpath('//*[@id="shopify-section-cart-template"]/div/div/form/div/div[2]/button[2]').click()
         print("went to contact page")
         driver.implicitly_wait(60) # wait 1 min in case of QUEUE
 
         emailInput = driver.find_element_by_id('checkout_email')
         emailInput.send_keys(email)
-        driver.find_element_by_id('checkout_buyer_accepts_marketing').click()
         driver.find_element_by_id('checkout_shipping_address_first_name').send_keys(firstName)
         driver.find_element_by_id('checkout_shipping_address_last_name').send_keys(lastName)
         driver.find_element_by_id('checkout_shipping_address_address1').send_keys(address)
@@ -68,7 +64,9 @@ class Scraper(object):
         print("filled contact info")
 
         #shipping button
-        driver.find_element_by_name('button').click()
+        # WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.ID, "continue_button")).click()
+        time.sleep(5)
+        driver.find_element_by_id('continue_button').click()
 
         driver.implicitly_wait(60)
         iframe = driver.find_element_by_class_name('card-fields-iframe') #cardNumber iframe
