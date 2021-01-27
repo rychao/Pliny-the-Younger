@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import json
@@ -71,9 +72,9 @@ class Scraper(object):
         print("{} | Successfully inputted all contact information.".format(str(datetime.datetime.now()).split('.')[0]))
 
         #shipping button
-        # WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.ID, "continue_button")).click()
-        time.sleep(5)
-        driver.find_element_by_id('continue_button').click()
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable(By.ID, "continue_button")).click()
+        #time.sleep(5)
+        #driver.find_element_by_id('continue_button').click()
         print("{} | Successfully submitted shipping page.".format(str(datetime.datetime.now()).split('.')[0]))
 
         driver.implicitly_wait(60)
