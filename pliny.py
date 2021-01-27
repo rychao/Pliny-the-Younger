@@ -59,8 +59,8 @@ class Scraper(object):
         driver.get("https://www.shop.russianriverbrewing.com/cart")
         driver.find_element_by_xpath('//*[@id="shopify-section-cart-template"]/div/div/form/div/div[2]/button[2]').click()
         print("{} | Succcesfully retrieved contact information page.".format(str(datetime.datetime.now()).split('.')[0]))
-        driver.implicitly_wait(60) # wait 1 min in case of QUEUE
 
+        WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.NAME, 'button'))) # wait 1 min in case of QUEUE
         driver.find_element_by_id('checkout_email').send_keys(email)
         driver.find_element_by_id('checkout_shipping_address_first_name').send_keys(firstName)
         driver.find_element_by_id('checkout_shipping_address_last_name').send_keys(lastName)
@@ -71,13 +71,11 @@ class Scraper(object):
         driver.find_element_by_name('button').click()
         print("{} | Successfully inputted all contact information.".format(str(datetime.datetime.now()).split('.')[0]))
 
-        #shipping button
-        WebDriverWait(driver, 10).until(EC.element_to_be_clickable(By.ID, "continue_button")).click()
-        #time.sleep(5)
-        #driver.find_element_by_id('continue_button').click()
+        # shipping button
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.NAME, 'button'))).click()
         print("{} | Successfully submitted shipping page.".format(str(datetime.datetime.now()).split('.')[0]))
 
-        driver.implicitly_wait(60)
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'continue_button')))
         iframe = driver.find_element_by_class_name('card-fields-iframe') #cardNumber iframe
         driver.switch_to.frame(iframe)
 
